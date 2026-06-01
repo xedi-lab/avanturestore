@@ -135,7 +135,7 @@ export default function AdminPage({ onProductsChange }) {
           </div>
         )}
         {products.map((p) => (
-          <div key={p.id} className={styles.row}>
+          <button key={p.id} className={styles.row} onClick={() => openEdit(p)}>
             {p.images?.[0]
               ? <img src={p.images[0]} alt={p.name} className={styles.thumb} />
               : <div className={styles.thumbEmpty}>😔</div>
@@ -147,11 +147,8 @@ export default function AdminPage({ onProductsChange }) {
                 {p.inStock ? '● В наличии' : '● Нет в наличии'}
               </div>
             </div>
-            <div className={styles.rowActions}>
-              <button className={styles.iconBtn} onClick={() => openEdit(p)}>✏️</button>
-              <button className={`${styles.iconBtn} ${styles.iconBtnDanger}`} onClick={() => handleDelete(p.id)}>🗑</button>
-            </div>
-          </div>
+            <div className={styles.rowChevron}>›</div>
+          </button>
         ))}
       </div>
     </div>
@@ -225,6 +222,16 @@ export default function AdminPage({ onProductsChange }) {
           disabled={!form.name.trim() || !form.price}>
           {editTarget ? 'Сохранить изменения' : 'Добавить товар'}
         </button>
+
+        {editTarget && (
+          <button className={styles.deleteBtn} onClick={() => {
+            if (!confirm('Удалить товар?')) return
+            sync(deleteProduct(editTarget.id))
+            setView('catalog')
+          }}>
+            🗑 Удалить товар
+          </button>
+        )}
       </div>
     </div>
   )
