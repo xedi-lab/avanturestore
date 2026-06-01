@@ -1,11 +1,19 @@
 import { useState, useRef } from 'react'
 import styles from './ProductCard.module.css'
 
+const BADGE_MAP = {
+  hot:         { label: '🔥 Хит',        cls: 'badgeHot' },
+  new:         { label: '🆕 Новинка',    cls: 'badgeNew' },
+  low_stock:   { label: '⚡ Мало',       cls: 'badgeLow' },
+  recommended: { label: '⭐ Топ выбор',  cls: 'badgeRec' },
+}
+
 export default function ProductCard({ product, onBuy }) {
   const [pressed, setPressed] = useState(false)
   const [imgIndex, setImgIndex] = useState(0)
   const touchStartX = useRef(null)
   const images = product.images?.length ? product.images : []
+  const badge = BADGE_MAP[product.badge]
 
   function onTouchStart(e) {
     touchStartX.current = e.touches[0].clientX
@@ -62,11 +70,24 @@ export default function ProductCard({ product, onBuy }) {
           </div>
         )}
         {!product.inStock && <div className={styles.soldOut}>Нет в наличии</div>}
-        <div className={styles.category}>{product.category}</div>
+
+        <div className={styles.topRow}>
+          <div className={styles.category}>{product.category}</div>
+          {badge && <div className={`${styles.badge} ${styles[badge.cls]}`}>{badge.label}</div>}
+        </div>
       </div>
 
       <div className={styles.body}>
         <h3 className={styles.name}>{product.name}</h3>
+
+        {(product.rating || product.reviews) && (
+          <div className={styles.ratingRow}>
+            <span className={styles.stars}>{'★'.repeat(Math.round(product.rating || 0))}</span>
+            <span className={styles.ratingNum}>{product.rating}</span>
+            {product.reviews && <span className={styles.reviews}>({product.reviews})</span>}
+          </div>
+        )}
+
         <p className={styles.description}>{product.description}</p>
 
         <div className={styles.footer}>
@@ -76,7 +97,7 @@ export default function ProductCard({ product, onBuy }) {
             onClick={() => product.inStock && onBuy(product)}
             disabled={!product.inStock}
           >
-            {product.inStock ? 'Купить' : 'Нет в наличии'}
+            {product.inStock ? 'Купить' : 'Нет'}
           </button>
         </div>
       </div>

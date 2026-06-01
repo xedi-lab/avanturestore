@@ -5,6 +5,8 @@ import BottomNav from './components/BottomNav'
 import LoadingScreen from './components/LoadingScreen'
 import FilterBar from './components/FilterBar'
 import HeroBlock from './components/HeroBlock'
+import UseCaseScroll from './components/UseCaseScroll'
+import HotItems from './components/HotItems'
 import AdminPage from './components/AdminPage'
 import { getProducts, isAdmin } from './services/productStore'
 import styles from './App.module.css'
@@ -33,6 +35,7 @@ export default function App() {
   const [loaded, setLoaded] = useState(false)
   const [tab, setTab] = useState('store')
   const [filter, setFilter] = useState('all')
+  const [useCaseFilter, setUseCaseFilter] = useState(null)
   const [products, setProducts] = useState(getProducts)
   const catalogRef = useRef(null)
   const admin = isAdmin()
@@ -40,12 +43,14 @@ export default function App() {
   const handleLoaded = useCallback(() => setLoaded(true), [])
 
   const scrollToCatalog = useCallback(() => {
-    catalogRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    setTimeout(() => catalogRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50)
   }, [])
 
-  const filtered = filter === 'all'
-    ? products
-    : products.filter((p) => p.category === filter)
+  const filtered = useCaseFilter
+    ? products.filter(p => p.useCases?.includes(useCaseFilter))
+    : filter === 'all'
+      ? products
+      : products.filter(p => p.category === filter)
 
   return (
     <>
@@ -61,8 +66,14 @@ export default function App() {
             {tab === 'store' && (
               <>
                 <HeroBlock onCatalog={scrollToCatalog} onConsult={openConsult} />
-                <div ref={catalogRef}>
-                  <FilterBar active={filter} onChange={setFilter} />
+                <UseCaseScroll onSelect={(useCase) => {
+                  setUseCaseFilter(useCase)
+                  setFilter('all')
+                  scrollToCatalog()
+                }} />
+                <HotItems products={products} onBuy={openTelegramChat} />
+                <div ref={catalogRef} style={{ paddingTop: 8 }}>
+                  <FilterBar active={useCaseFilter ? null : filter} onChange={(f) => { setFilter(f); setUseCaseFilter(null) }} useCaseActive={useCaseFilter} />
                 </div>
                 <div key={filter} className={styles.grid}>
                   {filtered.length > 0 ? (
