@@ -3,7 +3,14 @@ import { getProducts, addProduct, updateProduct, deleteProduct } from '../servic
 import styles from './AdminPage.module.css'
 
 const CATEGORIES = ['Микрофоны', 'Звуковые карты', 'Наушники', 'Аксессуары']
-const EMPTY_FORM = { name: '', category: 'Микрофоны', price: '', images: [], description: '', inStock: true }
+const BADGES = [
+  { value: '',            label: 'Без ярлыка' },
+  { value: 'hot',         label: '🔥 Хит продаж' },
+  { value: 'new',         label: '🆕 Новинка' },
+  { value: 'low_stock',   label: '⚡ Осталось мало' },
+  { value: 'recommended', label: '⭐ Топ выбор' },
+]
+const EMPTY_FORM = { name: '', category: 'Микрофоны', price: '', images: [], description: '', inStock: true, badge: '' }
 
 export default function AdminPage({ onProductsChange }) {
   // view: 'home' | 'catalog' | 'form' | 'warmup'
@@ -202,6 +209,21 @@ export default function AdminPage({ onProductsChange }) {
             </div>
             <textarea className={`${styles.input} ${styles.textarea}`} placeholder="Описание товара"
               value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+          </div>
+        </div>
+
+        <div className={styles.section}>
+          <div className={styles.sectionLabel}>Ярлык</div>
+          <div className={styles.badgePicker}>
+            {BADGES.map(b => (
+              <button
+                key={b.value}
+                className={`${styles.badgeOption} ${form.badge === b.value ? styles.badgeOptionActive : ''}`}
+                onClick={() => setForm({ ...form, badge: b.value })}
+              >
+                {b.label}
+              </button>
+            ))}
           </div>
         </div>
 

@@ -287,6 +287,37 @@
 
 .iconBtnDanger { background: #fff0f0; }
 
+/* ── Badge picker ── */
+.badgePicker {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.badgeOption {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid #e8e8e8;
+  background: #fafafa;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #444;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.badgeOption:active { transform: scale(0.98); }
+
+.badgeOptionActive {
+  border-color: #0a0a0a;
+  background: #0a0a0a;
+  color: #fff;
+  font-weight: 600;
+}
+
 /* ── Back btn ── */
 .backBtn {
   border: none;

@@ -1,23 +1,51 @@
+/* ── Base card ── */
 .card {
   background: #ffffff;
   border-radius: 20px;
   overflow: hidden;
   box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.04),
-    0 4px 12px rgba(0, 0, 0, 0.08),
-    0 16px 32px rgba(0, 0, 0, 0.06);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+    0 1px 2px rgba(0,0,0,0.04),
+    0 4px 12px rgba(0,0,0,0.08),
+    0 16px 32px rgba(0,0,0,0.06);
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
   cursor: pointer;
   user-select: none;
+  border: 2px solid transparent;
 }
 
 .pressed {
   transform: scale(0.97);
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.04),
-    0 2px 6px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 2px 6px rgba(0,0,0,0.08);
 }
 
+/* ── Badge accent rings ── */
+.cardHot {
+  border-color: #ff4d00;
+  box-shadow:
+    0 0 0 0 transparent,
+    0 4px 16px rgba(255,77,0,0.22),
+    0 16px 32px rgba(255,77,0,0.12);
+}
+.cardNew {
+  border-color: #2563eb;
+  box-shadow:
+    0 4px 16px rgba(37,99,235,0.2),
+    0 16px 32px rgba(37,99,235,0.10);
+}
+.cardLow {
+  border-color: #f59e0b;
+  box-shadow:
+    0 4px 16px rgba(245,158,11,0.22),
+    0 16px 32px rgba(245,158,11,0.10);
+}
+.cardRec {
+  border-color: #7c3aed;
+  box-shadow:
+    0 4px 16px rgba(124,58,237,0.2),
+    0 16px 32px rgba(124,58,237,0.10);
+}
+
+/* ── Image area ── */
 .imageWrap {
   position: relative;
   width: 100%;
@@ -30,7 +58,7 @@
   display: flex;
   width: 100%;
   height: 100%;
-  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
 }
 
 .image {
@@ -43,7 +71,7 @@
 
 .dots {
   position: absolute;
-  bottom: 7px;
+  bottom: 28px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -54,15 +82,12 @@
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255,255,255,0.5);
   transition: background 0.2s, transform 0.2s;
 }
+.dotActive { background: #fff; transform: scale(1.3); }
 
-.dotActive {
-  background: #ffffff;
-  transform: scale(1.3);
-}
-
+/* ── No image ── */
 .noImage {
   width: 100%;
   height: 100%;
@@ -73,22 +98,14 @@
   gap: 8px;
   background: #f0f0f0;
 }
+.noImageEmoji { font-size: 36px; }
+.noImageText { font-size: 12px; color: #aaa; font-weight: 500; letter-spacing: 0.02em; }
 
-.noImageEmoji {
-  font-size: 36px;
-}
-
-.noImageText {
-  font-size: 12px;
-  color: #aaa;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-}
-
+/* ── Sold out overlay ── */
 .soldOut {
   position: absolute;
   inset: 0;
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255,255,255,0.7);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -99,23 +116,16 @@
   text-transform: uppercase;
 }
 
-.topRow {
+/* ── Category pill top-left ── */
+.category {
   position: absolute;
   top: 8px;
   left: 8px;
-  right: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 4px;
-}
-
-.category {
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(0,0,0,0.72);
   color: #fff;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 3px 8px;
   border-radius: 20px;
@@ -123,28 +133,34 @@
   white-space: nowrap;
 }
 
-.badge {
-  font-size: 10px;
+/* ── Badge ribbon — bottom of image ── */
+.badgeRibbon {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 5px 10px 6px;
+  font-size: 11px;
   font-weight: 700;
-  padding: 3px 7px;
-  border-radius: 20px;
-  white-space: nowrap;
+  letter-spacing: 0.01em;
+  text-align: center;
 }
 
-.badgeHot { background: #ff4d00; color: #fff; }
-.badgeNew { background: #2563eb; color: #fff; }
-.badgeLow { background: #f59e0b; color: #fff; }
-.badgeRec { background: #7c3aed; color: #fff; }
+.ribbonHot { background: linear-gradient(90deg, #ff4d00, #ff7a35); color: #fff; }
+.ribbonNew { background: linear-gradient(90deg, #1d4ed8, #3b82f6); color: #fff; }
+.ribbonLow { background: linear-gradient(90deg, #d97706, #f59e0b); color: #fff; }
+.ribbonRec { background: linear-gradient(90deg, #6d28d9, #8b5cf6); color: #fff; }
 
+/* ── Card body ── */
 .body {
-  padding: 12px 14px 14px;
+  padding: 10px 12px 12px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
 }
 
 .name {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   color: #0a0a0a;
   letter-spacing: -0.02em;
@@ -154,30 +170,16 @@
 .ratingRow {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
 }
-
-.stars {
-  font-size: 10px;
-  color: #f59e0b;
-  letter-spacing: 1px;
-}
-
-.ratingNum {
-  font-size: 11px;
-  font-weight: 700;
-  color: #0a0a0a;
-}
-
-.reviews {
-  font-size: 11px;
-  color: #aaa;
-}
+.stars { font-size: 10px; color: #f59e0b; letter-spacing: 0.5px; }
+.ratingNum { font-size: 11px; font-weight: 700; color: #0a0a0a; }
+.reviews { font-size: 11px; color: #bbb; }
 
 .description {
-  font-size: 12px;
-  color: #666;
-  line-height: 1.5;
+  font-size: 11px;
+  color: #777;
+  line-height: 1.45;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -187,37 +189,37 @@
 .footer {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-top: 4px;
+  gap: 7px;
+  margin-top: 2px;
 }
 
 .price {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 800;
   color: #0a0a0a;
   letter-spacing: -0.03em;
 }
 
+/* buy button tinted per badge */
 .buyBtn {
   background: #0a0a0a;
   color: #fff;
   border: none;
   border-radius: 10px;
   padding: 9px 0;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 700;
   cursor: pointer;
   width: 100%;
-  transition: background 0.15s ease, transform 0.1s ease;
+  transition: opacity 0.15s, transform 0.12s;
   letter-spacing: -0.01em;
+  -webkit-tap-highlight-color: transparent;
 }
+.buyBtn:active { transform: scale(0.95); opacity: 0.85; }
+.buyBtn.disabled { background: #e8e8e8; color: #bbb; cursor: default; }
 
-.buyBtn:active {
-  transform: scale(0.95);
-}
-
-.buyBtn.disabled {
-  background: #e0e0e0;
-  color: #aaa;
-  cursor: default;
-}
+/* coloured buy button for badged cards */
+.cardHot .buyBtn:not(.disabled) { background: #ff4d00; }
+.cardNew .buyBtn:not(.disabled) { background: #2563eb; }
+.cardLow .buyBtn:not(.disabled) { background: #d97706; }
+.cardRec .buyBtn:not(.disabled) { background: #6d28d9; }

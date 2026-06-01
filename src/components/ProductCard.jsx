@@ -1,11 +1,11 @@
 import { useState, useRef } from 'react'
 import styles from './ProductCard.module.css'
 
-const BADGE_MAP = {
-  hot:         { label: '🔥 Хит',        cls: 'badgeHot' },
-  new:         { label: '🆕 Новинка',    cls: 'badgeNew' },
-  low_stock:   { label: '⚡ Мало',       cls: 'badgeLow' },
-  recommended: { label: '⭐ Топ выбор',  cls: 'badgeRec' },
+const BADGE = {
+  hot:         { label: '🔥 Хит продаж',   card: 'cardHot', ribbon: 'ribbonHot' },
+  new:         { label: '🆕 Новинка',       card: 'cardNew', ribbon: 'ribbonNew' },
+  low_stock:   { label: '⚡ Осталось мало', card: 'cardLow', ribbon: 'ribbonLow' },
+  recommended: { label: '⭐ Топ выбор',     card: 'cardRec', ribbon: 'ribbonRec' },
 }
 
 export default function ProductCard({ product, onBuy }) {
@@ -13,7 +13,7 @@ export default function ProductCard({ product, onBuy }) {
   const [imgIndex, setImgIndex] = useState(0)
   const touchStartX = useRef(null)
   const images = product.images?.length ? product.images : []
-  const badge = BADGE_MAP[product.badge]
+  const badge = BADGE[product.badge]
 
   function onTouchStart(e) {
     touchStartX.current = e.touches[0].clientX
@@ -22,25 +22,24 @@ export default function ProductCard({ product, onBuy }) {
     if (touchStartX.current === null || images.length < 2) return
     const dx = e.changedTouches[0].clientX - touchStartX.current
     if (Math.abs(dx) < 40) return
-    setImgIndex((i) => dx < 0
-      ? Math.min(i + 1, images.length - 1)
-      : Math.max(i - 1, 0)
-    )
+    setImgIndex(i => dx < 0 ? Math.min(i + 1, images.length - 1) : Math.max(i - 1, 0))
     touchStartX.current = null
   }
 
+  const cardClass = [
+    styles.card,
+    badge ? styles[badge.card] : '',
+    pressed ? styles.pressed : '',
+  ].filter(Boolean).join(' ')
+
   return (
     <div
-      className={`${styles.card} ${pressed ? styles.pressed : ''}`}
+      className={cardClass}
       onPointerDown={() => setPressed(true)}
       onPointerUp={() => setPressed(false)}
       onPointerLeave={() => setPressed(false)}
     >
-      <div
-        className={styles.imageWrap}
-        onTouchStart={onTouchStart}
-        onTouchEnd={onTouchEnd}
-      >
+      <div className={styles.imageWrap} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
         {images.length > 0 ? (
           <>
             <div
@@ -57,7 +56,7 @@ export default function ProductCard({ product, onBuy }) {
                   <span
                     key={i}
                     className={`${styles.dot} ${i === imgIndex ? styles.dotActive : ''}`}
-                    onPointerDown={(e) => { e.stopPropagation(); setImgIndex(i) }}
+                    onPointerDown={e => { e.stopPropagation(); setImgIndex(i) }}
                   />
                 ))}
               </div>
@@ -69,20 +68,24 @@ export default function ProductCard({ product, onBuy }) {
             <span className={styles.noImageText}>Фото отсутствует</span>
           </div>
         )}
-        {!product.inStock && <div className={styles.soldOut}>Нет в наличии</div>}
 
-        <div className={styles.topRow}>
-          <div className={styles.category}>{product.category}</div>
-          {badge && <div className={`${styles.badge} ${styles[badge.cls]}`}>{badge.label}</div>}
-        </div>
+        {!product.inStock && <div className={styles.soldOut}>Нет в наличии</div>}
+        <div className={styles.category}>{product.category}</div>
+
+        {/* цветная лента внизу фото */}
+        {badge && (
+          <div className={`${styles.badgeRibbon} ${styles[badge.ribbon]}`}>
+            {badge.label}
+          </div>
+        )}
       </div>
 
       <div className={styles.body}>
         <h3 className={styles.name}>{product.name}</h3>
 
-        {(product.rating || product.reviews) && (
+        {product.rating && (
           <div className={styles.ratingRow}>
-            <span className={styles.stars}>{'★'.repeat(Math.round(product.rating || 0))}</span>
+            <span className={styles.stars}>{'★'.repeat(Math.round(product.rating))}</span>
             <span className={styles.ratingNum}>{product.rating}</span>
             {product.reviews && <span className={styles.reviews}>({product.reviews})</span>}
           </div>
@@ -97,7 +100,7 @@ export default function ProductCard({ product, onBuy }) {
             onClick={() => product.inStock && onBuy(product)}
             disabled={!product.inStock}
           >
-            {product.inStock ? 'Купить' : 'Нет'}
+            {product.inStock ? 'Купить' : 'Нет в наличии'}
           </button>
         </div>
       </div>
