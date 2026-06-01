@@ -68,6 +68,33 @@
   animation: pageIn 0.3s ease both;
 }
 
+.filterBadge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px 2px;
+  font-size: 13px;
+  color: #555;
+}
+
+.filterBadge span {
+  font-weight: 600;
+  color: #0a0a0a;
+}
+
+.filterBadge button {
+  border: none;
+  background: none;
+  font-size: 12px;
+  color: #999;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 10px;
+  transition: background 0.15s;
+}
+
+.filterBadge button:active { background: rgba(0,0,0,0.07); }
+
 @keyframes pageIn {
   from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }

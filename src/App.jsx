@@ -7,6 +7,8 @@ import FilterBar from './components/FilterBar'
 import HeroBlock from './components/HeroBlock'
 import UseCaseScroll from './components/UseCaseScroll'
 import HotItems from './components/HotItems'
+import BrandFilter from './components/BrandFilter'
+import SearchBar from './components/SearchBar'
 import AdminPage from './components/AdminPage'
 import { getProducts, isAdmin } from './services/productStore'
 import styles from './App.module.css'
@@ -31,11 +33,23 @@ function openConsult() {
   }
 }
 
+function matchesSearch(p, q) {
+  const s = q.toLowerCase()
+  return (
+    p.name?.toLowerCase().includes(s) ||
+    p.brand?.toLowerCase().includes(s) ||
+    p.category?.toLowerCase().includes(s) ||
+    p.description?.toLowerCase().includes(s)
+  )
+}
+
 export default function App() {
   const [loaded, setLoaded] = useState(false)
   const [tab, setTab] = useState('store')
   const [filter, setFilter] = useState('all')
+  const [brandFilter, setBrandFilter] = useState(null)
   const [useCaseFilter, setUseCaseFilter] = useState(null)
+  const [search, setSearch] = useState('')
   const [products, setProducts] = useState(getProducts)
   const catalogRef = useRef(null)
   const admin = isAdmin()
@@ -46,11 +60,24 @@ export default function App() {
     setTimeout(() => catalogRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50)
   }, [])
 
-  const filtered = useCaseFilter
-    ? products.filter(p => p.useCases?.includes(useCaseFilter))
-    : filter === 'all'
-      ? products
-      : products.filter(p => p.category === filter)
+  const resetFilters = () => {
+    setFilter('all')
+    setUseCaseFilter(null)
+    setBrandFilter(null)
+  }
+
+  // search overrides everything
+  const filtered = search.trim()
+    ? products.filter(p => matchesSearch(p, search))
+    : brandFilter
+      ? products.filter(p => p.brand === brandFilter)
+      : useCaseFilter
+        ? products.filter(p => p.useCases?.includes(useCaseFilter))
+        : filter === 'all'
+          ? products
+          : products.filter(p => p.category === filter)
+
+  const isFiltering = search || brandFilter || useCaseFilter || filter !== 'all'
 
   return (
     <>
@@ -65,23 +92,58 @@ export default function App() {
           <div key={tab} className={styles.tabContent}>
             {tab === 'store' && (
               <>
-                <HeroBlock onCatalog={scrollToCatalog} onConsult={openConsult} />
-                <UseCaseScroll onSelect={(useCase) => {
-                  setUseCaseFilter(useCase)
-                  setFilter('all')
-                  scrollToCatalog()
+                {/* поиск всегда вверху */}
+                <SearchBar value={search} onChange={(v) => {
+                  setSearch(v)
+                  if (v) { resetFilters(); scrollToCatalog() }
                 }} />
-                <HotItems products={products} onBuy={openTelegramChat} />
-                <div ref={catalogRef} style={{ paddingTop: 8 }}>
-                  <FilterBar active={useCaseFilter ? null : filter} onChange={(f) => { setFilter(f); setUseCaseFilter(null) }} useCaseActive={useCaseFilter} />
+
+                {/* hero и блоки только когда нет поиска */}
+                {!search && (
+                  <>
+                    <HeroBlock onCatalog={scrollToCatalog} onConsult={openConsult} />
+                    <UseCaseScroll onSelect={(useCase) => {
+                      setUseCaseFilter(useCase)
+                      setBrandFilter(null)
+                      setFilter('all')
+                      scrollToCatalog()
+                    }} />
+                    <HotItems products={products} onBuy={openTelegramChat} />
+                    <BrandFilter active={brandFilter} onChange={(b) => {
+                      setBrandFilter(b)
+                      setUseCaseFilter(null)
+                      setFilter('all')
+                      scrollToCatalog()
+                    }} />
+                  </>
+                )}
+
+                {/* каталог */}
+                <div ref={catalogRef}>
+                  {!search && (
+                    <FilterBar
+                      active={useCaseFilter || brandFilter ? null : filter}
+                      onChange={(f) => { setFilter(f); setUseCaseFilter(null); setBrandFilter(null) }}
+                    />
+                  )}
+                  {isFiltering && !search && (
+                    <div className={styles.filterBadge}>
+                      {brandFilter && <span>Бренд: {brandFilter}</span>}
+                      {useCaseFilter && <span>Подборка по задаче</span>}
+                      <button onClick={resetFilters}>✕ Сбросить</button>
+                    </div>
+                  )}
                 </div>
-                <div key={filter} className={styles.grid}>
+
+                <div key={`${filter}-${brandFilter}-${useCaseFilter}-${search}`} className={styles.grid}>
                   {filtered.length > 0 ? (
                     filtered.map((p) => (
                       <ProductCard key={p.id} product={p} onBuy={openTelegramChat} />
                     ))
                   ) : (
-                    <div className={styles.empty}>Товаров не найдено</div>
+                    <div className={styles.empty}>
+                      {search ? `Ничего не найдено по «${search}»` : 'Товаров не найдено'}
+                    </div>
                   )}
                 </div>
               </>
