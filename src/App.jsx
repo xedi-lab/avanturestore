@@ -1,9 +1,10 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import ProductCard from './components/ProductCard'
 import BioPage from './components/BioPage'
 import BottomNav from './components/BottomNav'
 import LoadingScreen from './components/LoadingScreen'
 import FilterBar from './components/FilterBar'
+import HeroBlock from './components/HeroBlock'
 import AdminPage from './components/AdminPage'
 import { getProducts, isAdmin } from './services/productStore'
 import styles from './App.module.css'
@@ -19,14 +20,28 @@ function openTelegramChat(product) {
   }
 }
 
+function openConsult() {
+  const text = encodeURIComponent('Здравствуйте! Хочу подобрать оборудование, нужна помощь консультанта.')
+  if (window.Telegram?.WebApp) {
+    window.Telegram.WebApp.openTelegramLink(`https://t.me/avanturestorebot?text=${text}`)
+  } else {
+    window.open(`https://t.me/avanturestorebot?text=${text}`, '_blank')
+  }
+}
+
 export default function App() {
   const [loaded, setLoaded] = useState(false)
   const [tab, setTab] = useState('store')
   const [filter, setFilter] = useState('all')
   const [products, setProducts] = useState(getProducts)
+  const catalogRef = useRef(null)
   const admin = isAdmin()
 
   const handleLoaded = useCallback(() => setLoaded(true), [])
+
+  const scrollToCatalog = useCallback(() => {
+    catalogRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [])
 
   const filtered = filter === 'all'
     ? products
@@ -45,7 +60,10 @@ export default function App() {
           <div key={tab} className={styles.tabContent}>
             {tab === 'store' && (
               <>
-                <FilterBar active={filter} onChange={setFilter} />
+                <HeroBlock onCatalog={scrollToCatalog} onConsult={openConsult} />
+                <div ref={catalogRef}>
+                  <FilterBar active={filter} onChange={setFilter} />
+                </div>
                 <div key={filter} className={styles.grid}>
                   {filtered.length > 0 ? (
                     filtered.map((p) => (

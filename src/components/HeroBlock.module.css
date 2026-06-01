@@ -1,0 +1,118 @@
+.hero {
+  background: #0a0a0a;
+  margin: 8px 16px 4px;
+  border-radius: 24px;
+  overflow: hidden;
+  animation: heroIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.content {
+  padding: 24px 22px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.7);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 5px 12px;
+  border-radius: 20px;
+  width: fit-content;
+  animation: heroIn 0.4s cubic-bezier(0.22,1,0.36,1) 0.05s both;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.25;
+  letter-spacing: -0.03em;
+  animation: heroIn 0.4s cubic-bezier(0.22,1,0.36,1) 0.1s both;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.55;
+  animation: heroIn 0.4s cubic-bezier(0.22,1,0.36,1) 0.15s both;
+}
+
+.perks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  animation: heroIn 0.4s cubic-bezier(0.22,1,0.36,1) 0.2s both;
+}
+
+.perk {
+  font-size: 12px;
+  color: rgba(255,255,255,0.65);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.check {
+  color: #4ade80;
+  font-weight: 700;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: heroIn 0.4s cubic-bezier(0.22,1,0.36,1) 0.25s both;
+}
+
+.primaryBtn {
+  width: 100%;
+  padding: 14px;
+  background: #ffffff;
+  color: #0a0a0a;
+  border: none;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: -0.02em;
+  transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1), opacity 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.primaryBtn:active {
+  transform: scale(0.97);
+  opacity: 0.9;
+}
+
+.secondaryBtn {
+  width: 100%;
+  padding: 13px;
+  background: transparent;
+  color: rgba(255,255,255,0.7);
+  border: 1.5px solid rgba(255,255,255,0.2);
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: -0.01em;
+  transition: border-color 0.2s, color 0.2s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.secondaryBtn:active {
+  transform: scale(0.97);
+  border-color: rgba(255,255,255,0.5);
+  color: #fff;
+}
+
+@keyframes heroIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
