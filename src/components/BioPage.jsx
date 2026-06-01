@@ -42,7 +42,7 @@ export default function BioPage() {
       <div className={styles.card}>
         <h2 className={styles.sectionTitle}>Контакты</h2>
         <a
-          href="https://t.me/avanture_store"
+          href="https://t.me/avanturestorebot"
           className={styles.contactBtn}
           target="_blank"
           rel="noreferrer"

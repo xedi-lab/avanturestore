@@ -10,9 +10,9 @@ function openTelegramChat(product) {
     `Здравствуйте! Меня заинтересовал товар:\n\n*${product.name}*\nЦена: ${product.price.toLocaleString('ru-RU')} ₽\n\nМожно подробнее?`
   )
   if (window.Telegram?.WebApp) {
-    window.Telegram.WebApp.openTelegramLink(`https://t.me/avanture_store?text=${text}`)
+    window.Telegram.WebApp.openTelegramLink(`https://t.me/avanturestorebot?text=${text}`)
   } else {
-    window.open(`https://t.me/avanture_store?text=${text}`, '_blank')
+    window.open(`https://t.me/avanturestorebot?text=${text}`, '_blank')
   }
 }
 
