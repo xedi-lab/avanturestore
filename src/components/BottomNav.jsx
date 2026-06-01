@@ -2,6 +2,7 @@ import styles from './BottomNav.module.css'
 
 export default function BottomNav({ active, onChange, showAdmin }) {
   return (
+    <div className={styles.navWrap}>
     <nav className={styles.nav}>
       <button
         className={`${styles.tab} ${active === 'store' ? styles.active : ''}`}
@@ -36,5 +37,6 @@ export default function BottomNav({ active, onChange, showAdmin }) {
         </button>
       )}
     </nav>
+    </div>
   )
 }
