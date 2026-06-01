@@ -5,6 +5,20 @@
   padding-bottom: 100px;
 }
 
+.viewIn {
+  animation: viewSlide 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes viewSlide {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes rowIn {
+  from { opacity: 0; transform: translateX(-10px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
 /* ── Home ── */
 .homeHead {
   padding: 20px 20px 8px;
@@ -43,13 +57,17 @@
   box-shadow:
     0 1px 2px rgba(0,0,0,0.04),
     0 6px 18px rgba(0,0,0,0.08);
-  transition: transform 0.13s, box-shadow 0.13s;
+  transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.18s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .homeCard:active {
-  transform: scale(0.98);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transform: scale(0.955);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
 }
+
+.homeCards > *:nth-child(1) { animation: viewSlide 0.32s cubic-bezier(0.22,1,0.36,1) 60ms both; }
+.homeCards > *:nth-child(2) { animation: viewSlide 0.32s cubic-bezier(0.22,1,0.36,1) 120ms both; }
 
 .homeCardIcon {
   font-size: 28px;
@@ -91,6 +109,10 @@
   gap: 8px;
   padding: 12px 16px 0;
 }
+
+.statsRow > *:nth-child(1) { animation: viewSlide 0.32s cubic-bezier(0.22,1,0.36,1) 160ms both; }
+.statsRow > *:nth-child(2) { animation: viewSlide 0.32s cubic-bezier(0.22,1,0.36,1) 200ms both; }
+.statsRow > *:nth-child(3) { animation: viewSlide 0.32s cubic-bezier(0.22,1,0.36,1) 240ms both; }
 
 .statCard {
   background: #fff;
@@ -161,7 +183,16 @@
   box-shadow:
     0 1px 2px rgba(0,0,0,0.04),
     0 4px 12px rgba(0,0,0,0.07);
+  transition: transform 0.15s cubic-bezier(0.34,1.56,0.64,1);
+  -webkit-tap-highlight-color: transparent;
 }
+
+.catalog > *:nth-child(1) { animation: rowIn 0.28s cubic-bezier(0.22,1,0.36,1) 40ms  both; }
+.catalog > *:nth-child(2) { animation: rowIn 0.28s cubic-bezier(0.22,1,0.36,1) 80ms  both; }
+.catalog > *:nth-child(3) { animation: rowIn 0.28s cubic-bezier(0.22,1,0.36,1) 120ms both; }
+.catalog > *:nth-child(4) { animation: rowIn 0.28s cubic-bezier(0.22,1,0.36,1) 160ms both; }
+.catalog > *:nth-child(5) { animation: rowIn 0.28s cubic-bezier(0.22,1,0.36,1) 200ms both; }
+.catalog > *:nth-child(n+6){ animation: rowIn 0.28s cubic-bezier(0.22,1,0.36,1) 240ms both; }
 
 .thumb {
   width: 52px;
@@ -232,7 +263,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: transform 0.15s cubic-bezier(0.34,1.56,0.64,1), opacity 0.15s;
+  -webkit-tap-highlight-color: transparent;
 }
+
+.iconBtn:active { transform: scale(0.88); opacity: 0.7; }
 
 .iconBtnDanger { background: #fff0f0; }
 
@@ -434,7 +469,6 @@
 
 /* ── Buttons ── */
 .primaryBtn {
-  width: 100%;
   padding: 15px;
   background: #0a0a0a;
   color: #fff;
@@ -443,11 +477,14 @@
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
-  transition: opacity 0.15s;
   letter-spacing: -0.01em;
   margin: 0 16px;
   width: calc(100% - 32px);
+  transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1), opacity 0.15s, background 0.2s;
+  -webkit-tap-highlight-color: transparent;
 }
+
+.primaryBtn:active { transform: scale(0.97); opacity: 0.85; }
 
 .primaryBtn:disabled { opacity: 0.35; cursor: default; }
 .btnLoading { opacity: 0.6; }

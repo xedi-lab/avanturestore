@@ -42,24 +42,26 @@ export default function App() {
         </header>
 
         <main className={styles.main}>
-          {tab === 'store' && (
-            <>
-              <FilterBar active={filter} onChange={setFilter} />
-              <div className={styles.grid}>
-                {filtered.length > 0 ? (
-                  filtered.map((p) => (
-                    <ProductCard key={p.id} product={p} onBuy={openTelegramChat} />
-                  ))
-                ) : (
-                  <div className={styles.empty}>Товаров не найдено</div>
-                )}
-              </div>
-            </>
-          )}
-          {tab === 'bio' && <BioPage />}
-          {tab === 'admin' && admin && (
-            <AdminPage onProductsChange={(list) => setProducts(list)} />
-          )}
+          <div key={tab} className={styles.tabContent}>
+            {tab === 'store' && (
+              <>
+                <FilterBar active={filter} onChange={setFilter} />
+                <div key={filter} className={styles.grid}>
+                  {filtered.length > 0 ? (
+                    filtered.map((p) => (
+                      <ProductCard key={p.id} product={p} onBuy={openTelegramChat} />
+                    ))
+                  ) : (
+                    <div className={styles.empty}>Товаров не найдено</div>
+                  )}
+                </div>
+              </>
+            )}
+            {tab === 'bio' && <BioPage />}
+            {tab === 'admin' && admin && (
+              <AdminPage onProductsChange={(list) => setProducts(list)} />
+            )}
+          </div>
         </main>
 
         <BottomNav active={tab} onChange={setTab} showAdmin={admin} />

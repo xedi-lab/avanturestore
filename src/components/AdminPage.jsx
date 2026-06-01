@@ -71,9 +71,11 @@ export default function AdminPage({ onProductsChange }) {
     setTimeout(() => setWarmupStatus(null), 3000)
   }
 
+  const viewKey = view
+
   // ─── HOME ───────────────────────────────────────────────────
   if (view === 'home') return (
-    <div className={styles.page}>
+    <div key={viewKey} className={`${styles.page} ${styles.viewIn}`}>
       <div className={styles.homeHead}>
         <div className={styles.homeGreeting}>Панель управления</div>
         <div className={styles.homeSubtitle}>Выберите раздел</div>
@@ -118,7 +120,7 @@ export default function AdminPage({ onProductsChange }) {
 
   // ─── CATALOG ─────────────────────────────────────────────────
   if (view === 'catalog') return (
-    <div className={styles.page}>
+    <div key={viewKey} className={`${styles.page} ${styles.viewIn}`}>
       <div className={styles.subHeader}>
         <button className={styles.backBtn} onClick={() => setView('home')}>← Назад</button>
         <h2 className={styles.subTitle}>Витрина</h2>
@@ -157,7 +159,7 @@ export default function AdminPage({ onProductsChange }) {
 
   // ─── FORM ────────────────────────────────────────────────────
   if (view === 'form') return (
-    <div className={styles.page}>
+    <div key={viewKey} className={`${styles.page} ${styles.viewIn}`}>
       <div className={styles.subHeader}>
         <button className={styles.backBtn} onClick={() => setView('catalog')}>← Назад</button>
         <h2 className={styles.subTitle}>{editTarget ? 'Редактировать' : 'Новый товар'}</h2>
@@ -229,7 +231,7 @@ export default function AdminPage({ onProductsChange }) {
 
   // ─── WARMUP ──────────────────────────────────────────────────
   if (view === 'warmup') return (
-    <div className={styles.page}>
+    <div key={viewKey} className={`${styles.page} ${styles.viewIn}`}>
       <div className={styles.subHeader}>
         <button className={styles.backBtn} onClick={() => setView('home')}>← Назад</button>
         <h2 className={styles.subTitle}>Прогрев</h2>

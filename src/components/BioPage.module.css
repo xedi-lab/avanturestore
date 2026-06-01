@@ -19,6 +19,16 @@
   gap: 12px;
 }
 
+.page > *:nth-child(1) { animation: bioCardIn 0.38s cubic-bezier(0.22,1,0.36,1) 40ms  both; }
+.page > *:nth-child(2) { animation: bioCardIn 0.38s cubic-bezier(0.22,1,0.36,1) 100ms both; }
+.page > *:nth-child(3) { animation: bioCardIn 0.38s cubic-bezier(0.22,1,0.36,1) 160ms both; }
+.page > *:nth-child(4) { animation: bioCardIn 0.38s cubic-bezier(0.22,1,0.36,1) 220ms both; }
+
+@keyframes bioCardIn {
+  from { opacity: 0; transform: translateY(18px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 .card:first-child {
   align-items: center;
   text-align: center;
