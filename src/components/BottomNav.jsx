@@ -1,42 +1,44 @@
 import styles from './BottomNav.module.css'
 
-export default function BottomNav({ active, onChange, showAdmin }) {
+export default function BottomNav({ active, onChange }) {
   return (
     <div className={styles.navWrap}>
-    <nav className={styles.nav}>
-      <button
-        className={`${styles.tab} ${active === 'store' ? styles.active : ''}`}
-        onClick={() => onChange('store')}
-      >
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-          <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M9 22V12h6v10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-        <span>Витрина</span>
-      </button>
-      <button
-        className={`${styles.tab} ${active === 'bio' ? styles.active : ''}`}
-        onClick={() => onChange('bio')}
-      >
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-          <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2"/>
-          <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-        </svg>
-        <span>О нас</span>
-      </button>
-      {showAdmin && (
+      <nav className={styles.nav}>
+
         <button
-          className={`${styles.tab} ${active === 'admin' ? styles.active : ''}`}
-          onClick={() => onChange('admin')}
+          className={`${styles.tab} ${active === 'store' ? styles.active : ''}`}
+          onClick={() => onChange('store')}
         >
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-            <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2"/>
-            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M9 22V12h6v10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
-          <span>Панель</span>
+          <span>Главная</span>
         </button>
-      )}
-    </nav>
+
+        <button
+          className={`${styles.tab} ${active === 'search' ? styles.active : ''}`}
+          onClick={() => onChange('search')}
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2"/>
+            <path d="M16.5 16.5L21 21" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+          </svg>
+          <span>Поиск</span>
+        </button>
+
+        <button
+          className={`${styles.tab} ${active === 'profile' ? styles.active : ''}`}
+          onClick={() => onChange('profile')}
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2"/>
+            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+          </svg>
+          <span>Профиль</span>
+        </button>
+
+      </nav>
     </div>
   )
 }

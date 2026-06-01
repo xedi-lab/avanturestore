@@ -8,7 +8,7 @@ const BADGES = [
   { value: 'hot',         label: '🔥 Хит продаж' },
   { value: 'new',         label: '🆕 Новинка' },
   { value: 'low_stock',   label: '⚡ Осталось мало' },
-  { value: 'recommended', label: '⭐ Топ выбор' },
+  { value: 'recommended', label: '⚡ Топ выбор' },
 ]
 const EMPTY_FORM = { name: '', category: 'Микрофоны', price: '', images: [], description: '', inStock: true, badge: '' }
 

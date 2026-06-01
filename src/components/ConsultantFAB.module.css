@@ -1,0 +1,46 @@
+.fab {
+  position: fixed;
+  bottom: 96px;
+  right: 16px;
+  z-index: 40;
+
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 11px 16px 11px 13px;
+
+  background: #0a0a0a;
+  color: #fff;
+  border: none;
+  border-radius: 24px;
+  cursor: pointer;
+
+  box-shadow:
+    0 2px 8px rgba(0,0,0,0.2),
+    0 8px 24px rgba(0,0,0,0.15);
+
+  animation: fabIn 0.4s cubic-bezier(0.34,1.56,0.64,1) 1.2s both;
+  transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1),
+              box-shadow 0.18s ease,
+              opacity 0.18s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fab:active {
+  transform: scale(0.93);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+
+.icon { font-size: 16px; line-height: 1; }
+
+.text {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+@keyframes fabIn {
+  from { opacity: 0; transform: translateY(16px) scale(0.8); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}

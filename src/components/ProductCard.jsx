@@ -5,7 +5,7 @@ const BADGE = {
   hot:         { label: '🔥 Хит продаж',   card: 'cardHot', ribbon: 'ribbonHot' },
   new:         { label: '🆕 Новинка',       card: 'cardNew', ribbon: 'ribbonNew' },
   low_stock:   { label: '⚡ Осталось мало', card: 'cardLow', ribbon: 'ribbonLow' },
-  recommended: { label: '⭐ Топ выбор',     card: 'cardRec', ribbon: 'ribbonRec' },
+  recommended: { label: '⚡ Топ выбор',     card: 'cardRec', ribbon: 'ribbonRec' },
 }
 
 export default function ProductCard({ product, onBuy }) {

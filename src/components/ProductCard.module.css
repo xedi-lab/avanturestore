@@ -39,10 +39,10 @@
     0 16px 32px rgba(245,158,11,0.10);
 }
 .cardRec {
-  border-color: #7c3aed;
+  border-color: #2563eb;
   box-shadow:
-    0 4px 16px rgba(124,58,237,0.2),
-    0 16px 32px rgba(124,58,237,0.10);
+    0 4px 16px rgba(37,99,235,0.2),
+    0 16px 32px rgba(37,99,235,0.10);
 }
 
 /* ── Image area ── */
@@ -149,7 +149,7 @@
 .ribbonHot { background: linear-gradient(90deg, #ff4d00, #ff7a35); color: #fff; }
 .ribbonNew { background: linear-gradient(90deg, #1d4ed8, #3b82f6); color: #fff; }
 .ribbonLow { background: linear-gradient(90deg, #d97706, #f59e0b); color: #fff; }
-.ribbonRec { background: linear-gradient(90deg, #6d28d9, #8b5cf6); color: #fff; }
+.ribbonRec { background: linear-gradient(90deg, #1d4ed8, #3b82f6); color: #fff; }
 
 /* ── Card body ── */
 .body {
@@ -222,4 +222,4 @@
 .cardHot .buyBtn:not(.disabled) { background: #ff4d00; }
 .cardNew .buyBtn:not(.disabled) { background: #2563eb; }
 .cardLow .buyBtn:not(.disabled) { background: #d97706; }
-.cardRec .buyBtn:not(.disabled) { background: #6d28d9; }
+.cardRec .buyBtn:not(.disabled) { background: #2563eb; }
