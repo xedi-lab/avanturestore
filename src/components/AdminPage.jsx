@@ -104,7 +104,7 @@ export default function AdminPage({ onProductsChange }) {
                     ? <img src={p.image} alt={p.name} className={styles.thumb} />
                     : <div className={styles.thumbEmpty}>😔</div>
                   }
-                  <div>
+                  <div className={styles.textWrap}>
                     <div className={styles.productName}>{p.name}</div>
                     <div className={styles.productMeta}>{p.category} · {p.price.toLocaleString('ru-RU')} ₽ · {p.inStock ? '✓ В наличии' : '✗ Нет'}</div>
                   </div>
