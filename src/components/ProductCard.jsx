@@ -1,8 +1,25 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import styles from './ProductCard.module.css'
 
 export default function ProductCard({ product, onBuy }) {
   const [pressed, setPressed] = useState(false)
+  const [imgIndex, setImgIndex] = useState(0)
+  const touchStartX = useRef(null)
+  const images = product.images?.length ? product.images : []
+
+  function onTouchStart(e) {
+    touchStartX.current = e.touches[0].clientX
+  }
+  function onTouchEnd(e) {
+    if (touchStartX.current === null || images.length < 2) return
+    const dx = e.changedTouches[0].clientX - touchStartX.current
+    if (Math.abs(dx) < 40) return
+    setImgIndex((i) => dx < 0
+      ? Math.min(i + 1, images.length - 1)
+      : Math.max(i - 1, 0)
+    )
+    touchStartX.current = null
+  }
 
   return (
     <div
@@ -11,9 +28,33 @@ export default function ProductCard({ product, onBuy }) {
       onPointerUp={() => setPressed(false)}
       onPointerLeave={() => setPressed(false)}
     >
-      <div className={styles.imageWrap}>
-        {product.image ? (
-          <img src={product.image} alt={product.name} className={styles.image} />
+      <div
+        className={styles.imageWrap}
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+      >
+        {images.length > 0 ? (
+          <>
+            <div
+              className={styles.imageTrack}
+              style={{ transform: `translateX(-${imgIndex * 100}%)` }}
+            >
+              {images.map((src, i) => (
+                <img key={i} src={src} alt={product.name} className={styles.image} />
+              ))}
+            </div>
+            {images.length > 1 && (
+              <div className={styles.dots}>
+                {images.map((_, i) => (
+                  <span
+                    key={i}
+                    className={`${styles.dot} ${i === imgIndex ? styles.dotActive : ''}`}
+                    onPointerDown={(e) => { e.stopPropagation(); setImgIndex(i) }}
+                  />
+                ))}
+              </div>
+            )}
+          </>
         ) : (
           <div className={styles.noImage}>
             <span className={styles.noImageEmoji}>😔</span>

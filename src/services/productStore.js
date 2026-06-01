@@ -2,10 +2,15 @@ import { products as initialProducts } from '../data/products'
 
 const KEY = 'avanture_products'
 
+function migrate(p) {
+  if (p.images) return p
+  return { ...p, images: p.image ? [p.image] : [], image: undefined }
+}
+
 export function getProducts() {
   try {
     const raw = localStorage.getItem(KEY)
-    return raw ? JSON.parse(raw) : initialProducts
+    return raw ? JSON.parse(raw).map(migrate) : initialProducts
   } catch {
     return initialProducts
   }
