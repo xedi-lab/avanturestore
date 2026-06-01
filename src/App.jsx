@@ -1,7 +1,9 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import ProductCard from './components/ProductCard'
 import BioPage from './components/BioPage'
 import BottomNav from './components/BottomNav'
+import LoadingScreen from './components/LoadingScreen'
+import FilterBar from './components/FilterBar'
 import { products } from './data/products'
 import styles from './App.module.css'
 
@@ -17,27 +19,45 @@ function openTelegramChat(product) {
 }
 
 export default function App() {
+  const [loaded, setLoaded] = useState(false)
   const [tab, setTab] = useState('store')
+  const [filter, setFilter] = useState('all')
+
+  const handleLoaded = useCallback(() => setLoaded(true), [])
+
+  const filtered = filter === 'all'
+    ? products
+    : products.filter((p) => p.category === filter)
 
   return (
-    <div className={styles.app}>
-      <header className={styles.header}>
-        <span className={styles.logo}>Avanture</span>
-        <span className={styles.logoAccent}>Store</span>
-      </header>
+    <>
+      {!loaded && <LoadingScreen onDone={handleLoaded} />}
+      <div className={styles.app}>
+        <header className={styles.header}>
+          <span className={styles.logo}>Avanture</span>
+          <span className={styles.logoAccent}>Store</span>
+        </header>
 
-      <main className={styles.main}>
-        {tab === 'store' && (
-          <div className={styles.grid}>
-            {products.map((p) => (
-              <ProductCard key={p.id} product={p} onBuy={openTelegramChat} />
-            ))}
-          </div>
-        )}
-        {tab === 'bio' && <BioPage />}
-      </main>
+        <main className={styles.main}>
+          {tab === 'store' && (
+            <>
+              <FilterBar active={filter} onChange={setFilter} />
+              <div className={styles.grid}>
+                {filtered.length > 0 ? (
+                  filtered.map((p) => (
+                    <ProductCard key={p.id} product={p} onBuy={openTelegramChat} />
+                  ))
+                ) : (
+                  <div className={styles.empty}>Товаров не найдено</div>
+                )}
+              </div>
+            </>
+          )}
+          {tab === 'bio' && <BioPage />}
+        </main>
 
-      <BottomNav active={tab} onChange={setTab} />
-    </div>
+        <BottomNav active={tab} onChange={setTab} />
+      </div>
+    </>
   )
 }
