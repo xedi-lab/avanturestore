@@ -10,7 +10,10 @@ import BrandFilter from './components/BrandFilter'
 import ConsultantFAB from './components/ConsultantFAB'
 import SearchPage from './pages/SearchPage'
 import ProfilePage from './pages/ProfilePage'
+import FavoritesPage from './pages/FavoritesPage'
+import AdminPage from './components/AdminPage'
 import { getProducts, isAdmin } from './services/productStore'
+import { getFavorites, toggleFavorite } from './services/favoritesStore'
 import styles from './App.module.css'
 
 function openTelegramChat(product) {
@@ -40,6 +43,7 @@ export default function App() {
   const [brandFilter, setBrandFilter] = useState(null)
   const [useCaseFilter, setUseCaseFilter] = useState(null)
   const [products, setProducts] = useState(getProducts)
+  const [favorites, setFavorites] = useState(getFavorites)
   const catalogRef = useRef(null)
   const admin = isAdmin()
 
@@ -47,6 +51,10 @@ export default function App() {
 
   const scrollToCatalog = useCallback(() => {
     setTimeout(() => catalogRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50)
+  }, [])
+
+  const handleToggleFavorite = useCallback((id) => {
+    setFavorites(toggleFavorite(id))
   }, [])
 
   const resetFilters = () => { setFilter('all'); setUseCaseFilter(null); setBrandFilter(null) }
@@ -101,7 +109,15 @@ export default function App() {
 
                 <div key={`${filter}-${brandFilter}-${useCaseFilter}`} className={styles.grid}>
                   {filtered.length > 0
-                    ? filtered.map(p => <ProductCard key={p.id} product={p} onBuy={openTelegramChat} />)
+                    ? filtered.map(p => (
+                        <ProductCard
+                          key={p.id}
+                          product={p}
+                          onBuy={openTelegramChat}
+                          isFavorite={favorites.includes(p.id)}
+                          onToggleFavorite={handleToggleFavorite}
+                        />
+                      ))
                     : <div className={styles.empty}>Товаров не найдено</div>
                   }
                 </div>
@@ -110,22 +126,44 @@ export default function App() {
 
             {/* ── ПОИСК ── */}
             {tab === 'search' && (
-              <SearchPage products={products} onBuy={openTelegramChat} />
+              <SearchPage
+                products={products}
+                onBuy={openTelegramChat}
+                favorites={favorites}
+                onToggleFavorite={handleToggleFavorite}
+              />
+            )}
+
+            {/* ── ИЗБРАННОЕ ── */}
+            {tab === 'favorites' && (
+              <FavoritesPage
+                products={products}
+                favorites={favorites}
+                onBuy={openTelegramChat}
+                onToggleFavorite={handleToggleFavorite}
+              />
             )}
 
             {/* ── ПРОФИЛЬ ── */}
             {tab === 'profile' && (
-              <ProfilePage
-                isAdmin={admin}
-                onProductsChange={(list) => setProducts(list)}
-              />
+              <ProfilePage isAdmin={admin} onProductsChange={(list) => setProducts(list)} />
+            )}
+
+            {/* ── ПАНЕЛЬ ── */}
+            {tab === 'admin' && admin && (
+              <AdminPage onProductsChange={(list) => setProducts(list)} />
             )}
 
           </div>
         </main>
 
         <ConsultantFAB onClick={openConsult} />
-        <BottomNav active={tab} onChange={setTab} />
+        <BottomNav
+          active={tab}
+          onChange={setTab}
+          showAdmin={admin}
+          favCount={favorites.length}
+        />
       </div>
     </>
   )

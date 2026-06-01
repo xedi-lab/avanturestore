@@ -8,9 +8,10 @@ const BADGE = {
   recommended: { label: '⚡ Топ выбор',     card: 'cardRec', ribbon: 'ribbonRec' },
 }
 
-export default function ProductCard({ product, onBuy }) {
+export default function ProductCard({ product, onBuy, isFavorite = false, onToggleFavorite }) {
   const [pressed, setPressed] = useState(false)
   const [imgIndex, setImgIndex] = useState(0)
+  const [fav, setFav] = useState(isFavorite)
   const touchStartX = useRef(null)
   const images = product.images?.length ? product.images : []
   const badge = BADGE[product.badge]
@@ -71,6 +72,20 @@ export default function ProductCard({ product, onBuy }) {
 
         {!product.inStock && <div className={styles.soldOut}>Нет в наличии</div>}
         <div className={styles.category}>{product.category}</div>
+        {onToggleFavorite && (
+          <button
+            className={`${styles.favBtn} ${fav ? styles.favActive : ''}`}
+            onPointerDown={e => e.stopPropagation()}
+            onClick={e => {
+              e.stopPropagation()
+              const next = !fav
+              setFav(next)
+              onToggleFavorite(product.id)
+            }}
+          >
+            {fav ? '❤️' : '🤍'}
+          </button>
+        )}
 
         {/* цветная лента внизу фото */}
         {badge && (

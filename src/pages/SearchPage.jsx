@@ -20,7 +20,7 @@ const HINTS = [
   { label: 'Наушники',      q: 'Наушники' },
 ]
 
-export default function SearchPage({ products, onBuy }) {
+export default function SearchPage({ products, onBuy, favorites = [], onToggleFavorite }) {
   const [query, setQuery] = useState('')
   const inputRef = useRef(null)
 
@@ -80,7 +80,12 @@ export default function SearchPage({ products, onBuy }) {
           <div className={styles.grid}>
             {results.map((p, i) => (
               <div key={p.id} style={{ animationDelay: `${i * 50}ms` }} className={styles.cardWrap}>
-                <ProductCard product={p} onBuy={onBuy} />
+                <ProductCard
+                  product={p}
+                  onBuy={onBuy}
+                  isFavorite={favorites.includes(p.id)}
+                  onToggleFavorite={onToggleFavorite}
+                />
               </div>
             ))}
           </div>
