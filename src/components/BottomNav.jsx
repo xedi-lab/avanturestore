@@ -1,6 +1,6 @@
 import styles from './BottomNav.module.css'
 
-export default function BottomNav({ active, onChange }) {
+export default function BottomNav({ active, onChange, showAdmin }) {
   return (
     <nav className={styles.nav}>
       <button
@@ -23,6 +23,18 @@ export default function BottomNav({ active, onChange }) {
         </svg>
         <span>О нас</span>
       </button>
+      {showAdmin && (
+        <button
+          className={`${styles.tab} ${active === 'admin' ? styles.active : ''}`}
+          onClick={() => onChange('admin')}
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2"/>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+          </svg>
+          <span>Панель</span>
+        </button>
+      )}
     </nav>
   )
 }

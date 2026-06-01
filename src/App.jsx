@@ -4,7 +4,8 @@ import BioPage from './components/BioPage'
 import BottomNav from './components/BottomNav'
 import LoadingScreen from './components/LoadingScreen'
 import FilterBar from './components/FilterBar'
-import { products } from './data/products'
+import AdminPage from './components/AdminPage'
+import { getProducts, isAdmin } from './services/productStore'
 import styles from './App.module.css'
 
 function openTelegramChat(product) {
@@ -22,6 +23,8 @@ export default function App() {
   const [loaded, setLoaded] = useState(false)
   const [tab, setTab] = useState('store')
   const [filter, setFilter] = useState('all')
+  const [products, setProducts] = useState(getProducts)
+  const admin = isAdmin()
 
   const handleLoaded = useCallback(() => setLoaded(true), [])
 
@@ -32,7 +35,7 @@ export default function App() {
   return (
     <>
       {!loaded && <LoadingScreen onDone={handleLoaded} />}
-      <div className={styles.app}>
+      <div className={styles.app} style={!loaded ? { visibility: 'hidden' } : {}}>
         <header className={styles.header}>
           <span className={styles.logo}>Avanture</span>
           <span className={styles.logoAccent}>Store</span>
@@ -54,9 +57,12 @@ export default function App() {
             </>
           )}
           {tab === 'bio' && <BioPage />}
+          {tab === 'admin' && admin && (
+            <AdminPage onProductsChange={(list) => setProducts(list)} />
+          )}
         </main>
 
-        <BottomNav active={tab} onChange={setTab} />
+        <BottomNav active={tab} onChange={setTab} showAdmin={admin} />
       </div>
     </>
   )
