@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { getProducts, addProduct, updateProduct, deleteProduct } from '../services/productStore'
+import { getProducts, fetchProducts, addProduct, updateProduct, deleteProduct } from '../services/productStore'
 import styles from './AdminPage.module.css'
 
 const CATEGORIES = ['Микрофоны', 'Звуковые карты', 'Наушники', 'Аксессуары']
@@ -39,9 +39,11 @@ export default function AdminPage({ onProductsChange }) {
     setView('form')
   }
 
-  function handleDelete(id) {
+  async function handleDelete(id) {
     if (!confirm('Удалить товар?')) return
-    sync(deleteProduct(id))
+    await deleteProduct(id)
+    const list = await fetchProducts()
+    sync(list)
   }
 
   function addImage() {
@@ -55,13 +57,20 @@ export default function AdminPage({ onProductsChange }) {
     setForm((f) => ({ ...f, images: f.images.filter((_, idx) => idx !== i) }))
   }
 
-  function handleSave() {
+  const [saving, setSaving] = useState(false)
+
+  async function handleSave() {
     if (!form.name.trim() || !form.price) return
-    const payload = { ...form, price: Number(form.price) }
-    if (editTarget) updateProduct(editTarget.id, payload)
-    else addProduct(payload)
-    sync(getProducts())
-    setView('catalog')
+    setSaving(true)
+    try {
+      const payload = { ...form, price: Number(form.price), badge: form.badge || null }
+      if (editTarget) await updateProduct(editTarget.id, payload)
+      else await addProduct(payload)
+      const list = await fetchProducts()
+      sync(list)
+      setView('catalog')
+    } catch (e) { alert('Ошибка сохранения: ' + e.message) }
+    finally { setSaving(false) }
   }
 
   async function handleWarmup() {
@@ -242,7 +251,7 @@ export default function AdminPage({ onProductsChange }) {
 
         <button className={styles.primaryBtn} onClick={handleSave}
           disabled={!form.name.trim() || !form.price}>
-          {editTarget ? 'Сохранить изменения' : 'Добавить товар'}
+          {saving ? 'Сохранение...' : editTarget ? 'Сохранить изменения' : 'Добавить товар'}
         </button>
 
         {editTarget && (

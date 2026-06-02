@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import ProductCard from './components/ProductCard'
 import BottomNav from './components/BottomNav'
 import LoadingScreen from './components/LoadingScreen'
@@ -11,7 +11,7 @@ import ProfilePage from './pages/ProfilePage'
 import CartPage from './pages/CartPage'
 import ProductDetailPage from './pages/ProductDetailPage'
 import AdminPage from './components/AdminPage'
-import { getProducts, isAdmin } from './services/productStore'
+import { getProducts, fetchProducts, isAdmin } from './services/productStore'
 import { getCart, addToCart, getCartCount } from './services/cartStore'
 import styles from './App.module.css'
 
@@ -46,6 +46,11 @@ export default function App() {
   const [navHidden, setNavHidden] = useState(false)
   const catalogRef = useRef(null)
   const admin = isAdmin()
+
+  // Fetch from Supabase on mount (falls back to localStorage if not configured)
+  useEffect(() => {
+    fetchProducts().then(list => setProducts(list))
+  }, [])
 
   const handleLoaded = useCallback(() => setLoaded(true), [])
 
