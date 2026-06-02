@@ -4,16 +4,15 @@ import BottomNav from './components/BottomNav'
 import LoadingScreen from './components/LoadingScreen'
 import FilterBar from './components/FilterBar'
 import HeroBlock from './components/HeroBlock'
-import UseCaseScroll from './components/UseCaseScroll'
 import HotItems from './components/HotItems'
 import BrandFilter from './components/BrandFilter'
-import ConsultantFAB from './components/ConsultantFAB'
 import SearchPage from './pages/SearchPage'
 import ProfilePage from './pages/ProfilePage'
-import FavoritesPage from './pages/FavoritesPage'
+import CartPage from './pages/CartPage'
+import ProductDetailPage from './pages/ProductDetailPage'
 import AdminPage from './components/AdminPage'
 import { getProducts, isAdmin } from './services/productStore'
-import { getFavorites, toggleFavorite } from './services/favoritesStore'
+import { getCart, addToCart, getCartCount } from './services/cartStore'
 import styles from './App.module.css'
 
 function openTelegramChat(product) {
@@ -41,9 +40,10 @@ export default function App() {
   const [tab, setTab] = useState('store')
   const [filter, setFilter] = useState('all')
   const [brandFilter, setBrandFilter] = useState(null)
-  const [useCaseFilter, setUseCaseFilter] = useState(null)
   const [products, setProducts] = useState(getProducts)
-  const [favorites, setFavorites] = useState(getFavorites)
+  const [cart, setCart] = useState(getCart)
+  const [selectedProduct, setSelectedProduct] = useState(null)
+  const [navHidden, setNavHidden] = useState(false)
   const catalogRef = useRef(null)
   const admin = isAdmin()
 
@@ -53,21 +53,32 @@ export default function App() {
     setTimeout(() => catalogRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50)
   }, [])
 
-  const handleToggleFavorite = useCallback((id) => {
-    setFavorites(toggleFavorite(id))
+  const handleAddToCart = useCallback((id) => {
+    setCart(addToCart(id))
   }, [])
 
-  const resetFilters = () => { setFilter('all'); setUseCaseFilter(null); setBrandFilter(null) }
+  const resetFilters = () => { setFilter('all'); setBrandFilter(null) }
 
   const filtered = brandFilter
     ? products.filter(p => p.brand === brandFilter)
-    : useCaseFilter
-      ? products.filter(p => p.useCases?.includes(useCaseFilter))
-      : filter === 'all'
-        ? products
-        : products.filter(p => p.category === filter)
+    : filter === 'all'
+      ? products
+      : products.filter(p => p.category === filter)
 
-  const isFiltering = brandFilter || useCaseFilter || filter !== 'all'
+  // Product detail overlay — shown above current tab
+  if (selectedProduct) {
+    return (
+      <div className={styles.app} style={!loaded ? { visibility: 'hidden' } : {}}>
+        <ProductDetailPage
+          product={selectedProduct}
+          onBack={() => setSelectedProduct(null)}
+          onBuy={openTelegramChat}
+          onAddToCart={handleAddToCart}
+          inCart={cart.some(i => i.id === selectedProduct.id)}
+        />
+      </div>
+    )
+  }
 
   return (
     <>
@@ -85,37 +96,30 @@ export default function App() {
             {tab === 'store' && (
               <>
                 <HeroBlock onCatalog={scrollToCatalog} onConsult={openConsult} />
-                <UseCaseScroll onSelect={(useCase) => {
-                  setUseCaseFilter(useCase); setBrandFilter(null); setFilter('all'); scrollToCatalog()
-                }} />
-                <HotItems products={products} onBuy={openTelegramChat} />
+                <HotItems products={products} onBuy={openTelegramChat} onSelect={setSelectedProduct} />
                 <BrandFilter active={brandFilter} onChange={(b) => {
-                  setBrandFilter(b); setUseCaseFilter(null); setFilter('all'); scrollToCatalog()
+                  setBrandFilter(b); setFilter('all'); scrollToCatalog()
                 }} />
-
                 <div ref={catalogRef}>
                   <FilterBar
-                    active={useCaseFilter || brandFilter ? null : filter}
-                    onChange={(f) => { setFilter(f); setUseCaseFilter(null); setBrandFilter(null) }}
+                    active={brandFilter ? null : filter}
+                    onChange={(f) => { setFilter(f); setBrandFilter(null) }}
                   />
-                  {isFiltering && (
+                  {(brandFilter || filter !== 'all') && (
                     <div className={styles.filterBadge}>
                       {brandFilter && <span>Бренд: {brandFilter}</span>}
-                      {useCaseFilter && <span>Подборка по задаче</span>}
                       <button onClick={resetFilters}>✕ Сбросить</button>
                     </div>
                   )}
                 </div>
-
-                <div key={`${filter}-${brandFilter}-${useCaseFilter}`} className={styles.grid}>
+                <div key={`${filter}-${brandFilter}`} className={styles.grid}>
                   {filtered.length > 0
                     ? filtered.map(p => (
                         <ProductCard
                           key={p.id}
                           product={p}
                           onBuy={openTelegramChat}
-                          isFavorite={favorites.includes(p.id)}
-                          onToggleFavorite={handleToggleFavorite}
+                          onSelect={setSelectedProduct}
                         />
                       ))
                     : <div className={styles.empty}>Товаров не найдено</div>
@@ -129,18 +133,19 @@ export default function App() {
               <SearchPage
                 products={products}
                 onBuy={openTelegramChat}
-                favorites={favorites}
-                onToggleFavorite={handleToggleFavorite}
+                onSelect={setSelectedProduct}
+                onKeyboardOpen={setNavHidden}
               />
             )}
 
-            {/* ── ИЗБРАННОЕ ── */}
-            {tab === 'favorites' && (
-              <FavoritesPage
+            {/* ── КОРЗИНА ── */}
+            {tab === 'cart' && (
+              <CartPage
                 products={products}
-                favorites={favorites}
+                cart={cart}
+                onCartChange={setCart}
                 onBuy={openTelegramChat}
-                onToggleFavorite={handleToggleFavorite}
+                onSelect={setSelectedProduct}
               />
             )}
 
@@ -157,13 +162,14 @@ export default function App() {
           </div>
         </main>
 
-        <ConsultantFAB onClick={openConsult} />
-        <BottomNav
-          active={tab}
-          onChange={setTab}
-          showAdmin={admin}
-          favCount={favorites.length}
-        />
+        {!navHidden && (
+          <BottomNav
+            active={tab}
+            onChange={setTab}
+            showAdmin={admin}
+            cartCount={getCartCount()}
+          />
+        )}
       </div>
     </>
   )

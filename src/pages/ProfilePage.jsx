@@ -2,6 +2,15 @@ import { useState } from 'react'
 import AdminPage from '../components/AdminPage'
 import styles from './ProfilePage.module.css'
 
+function openConsult() {
+  const text = encodeURIComponent('Здравствуйте! Хочу подобрать оборудование, нужна помощь консультанта.')
+  if (window.Telegram?.WebApp) {
+    window.Telegram.WebApp.openTelegramLink(`https://t.me/avanturestorebot?text=${text}`)
+  } else {
+    window.open(`https://t.me/avanturestorebot?text=${text}`, '_blank')
+  }
+}
+
 export default function ProfilePage({ isAdmin, onProductsChange }) {
   const [showAdmin, setShowAdmin] = useState(false)
 
@@ -54,6 +63,9 @@ export default function ProfilePage({ isAdmin, onProductsChange }) {
         <a href="https://t.me/avanturestorebot" className={styles.contactBtn} target="_blank" rel="noreferrer">
           Написать в Telegram
         </a>
+        <button className={styles.consultBtn} onClick={openConsult}>
+          💬 Нужна помощь с выбором?
+        </button>
       </div>
 
       {isAdmin && (

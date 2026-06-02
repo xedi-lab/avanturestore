@@ -22,11 +22,13 @@ const TABS = [
     ),
   },
   {
-    id: 'favorites',
-    label: 'Избранное',
+    id: 'cart',
+    label: 'Корзина',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        <line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+        <path d="M16 10a4 4 0 01-8 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
       </svg>
     ),
   },
@@ -55,7 +57,7 @@ const ADMIN_TAB = {
   ),
 }
 
-export default function BottomNav({ active, onChange, showAdmin, favCount = 0 }) {
+export default function BottomNav({ active, onChange, showAdmin, cartCount = 0 }) {
   const tabs = showAdmin ? [...TABS, ADMIN_TAB] : TABS
 
   return (
@@ -69,8 +71,8 @@ export default function BottomNav({ active, onChange, showAdmin, favCount = 0 })
           >
             <div className={styles.iconWrap}>
               {tab.icon}
-              {tab.id === 'favorites' && favCount > 0 && (
-                <span className={styles.badge}>{favCount > 9 ? '9+' : favCount}</span>
+              {tab.id === 'cart' && cartCount > 0 && (
+                <span className={styles.badge}>{cartCount > 9 ? '9+' : cartCount}</span>
               )}
             </div>
             <span className={styles.label}>{tab.label}</span>

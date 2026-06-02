@@ -20,13 +20,16 @@ const HINTS = [
   { label: 'Наушники',      q: 'Наушники' },
 ]
 
-export default function SearchPage({ products, onBuy, favorites = [], onToggleFavorite }) {
+export default function SearchPage({ products, onBuy, onSelect, onKeyboardOpen }) {
   const [query, setQuery] = useState('')
   const inputRef = useRef(null)
 
   useEffect(() => {
     setTimeout(() => inputRef.current?.focus(), 100)
   }, [])
+
+  function handleFocus() { onKeyboardOpen?.(true) }
+  function handleBlur()  { onKeyboardOpen?.(false) }
 
   const results = query.trim() ? products.filter(p => matchesSearch(p, query)) : []
 
@@ -44,6 +47,8 @@ export default function SearchPage({ products, onBuy, favorites = [], onToggleFa
             type="text"
             value={query}
             onChange={e => setQuery(e.target.value)}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
             placeholder="Поиск по бренду или модели"
           />
           {query && (
@@ -80,12 +85,7 @@ export default function SearchPage({ products, onBuy, favorites = [], onToggleFa
           <div className={styles.grid}>
             {results.map((p, i) => (
               <div key={p.id} style={{ animationDelay: `${i * 50}ms` }} className={styles.cardWrap}>
-                <ProductCard
-                  product={p}
-                  onBuy={onBuy}
-                  isFavorite={favorites.includes(p.id)}
-                  onToggleFavorite={onToggleFavorite}
-                />
+                <ProductCard product={p} onBuy={onBuy} onSelect={onSelect} />
               </div>
             ))}
           </div>
