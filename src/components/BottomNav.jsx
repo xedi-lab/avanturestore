@@ -73,7 +73,7 @@ export default function BottomNav({ active, onChange, showAdmin, favCount = 0 })
                 <span className={styles.badge}>{favCount > 9 ? '9+' : favCount}</span>
               )}
             </div>
-            <span>{tab.label}</span>
+            <span className={styles.label}>{tab.label}</span>
           </button>
         ))}
       </nav>
