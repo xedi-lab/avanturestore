@@ -162,10 +162,10 @@ export default function App() {
           </div>
         </main>
 
-        {!navHidden && (
+        {!(tab === 'search' && navHidden) && (
           <BottomNav
             active={tab}
-            onChange={setTab}
+            onChange={(newTab) => { setNavHidden(false); setTab(newTab) }}
             showAdmin={admin}
             cartCount={getCartCount()}
           />
